@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Академия Хирургии "SurgiExpert" — Курсы и Практика в Казахстане</title>
+    <!-- Подключение FontAwesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0a4b78;
+            --secondary: #00a896;
+            --accent: #e63946;
+            --dark: #1d3557;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--light); color: var(--dark); line-height: 1.6; }
+        
+        /* Navigation */
+        nav { background: white; padding: 1rem 5%; position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        nav .logo { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+        nav ul { display: flex; list-style: none; gap: 20px; }
+        nav a { text-decoration: none; color: var(--dark); font-weight: 500; transition: 0.3s; }
+        nav a:hover { color: var(--secondary); }
+
+        /* General Section Layout */
+        section { padding: 80px 5% 40px; }
+        .section-title { text-align: center; margin-bottom: 40px; }
+        .section-title h2 { font-size: 2.2rem; color: var(--primary); margin-bottom: 10px; }
+        .section-title p { color: var(--gray); font-size: 1.1rem; }
+
+        /* 1. Hero Section */
+        #hero { min-height: 90vh; background: linear-gradient(rgba(10, 75, 120, 0.85), rgba(29, 53, 87, 0.85)), url('https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&w=1350&q=80') center/cover; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; margin-top: 60px; }
+        #hero h1 { font-size: 3rem; margin-bottom: 20px; max-width: 800px; }
+        #hero p { font-size: 1.3rem; margin-bottom: 30px; max-width: 600px; }
+        .btn { background: var(--secondary); color: white; padding: 12px 30px; border-radius: 5px; text-decoration: none; font-weight: bold; border: none; cursor: pointer; transition: 0.3s; }
+        .btn:hover { background: #008072; }
+
+        /* 2. Stats Section */
+        #stats { background: white; display: flex; justify-content: space-around; flex-wrap: wrap; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .stat-item h3 { font-size: 2.5rem; color: var(--secondary); }
+
+        /* Grid Layouts */
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card-content { padding: 20px; }
+
+        /* 6. Calculator */
+        #calculator { background: white; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); padding: 40px; max-width: 800px; margin: 0 auto; }
+        .calc-group { margin-bottom: 20px; }
+        .calc-group label { display: block; font-weight: bold; margin-bottom: 8px; }
+        .calc-group select, .calc-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        .price-output { background: var(--light); padding: 20px; border-radius: 8px; border-left: 5px solid var(--secondary); margin-top: 20px; }
+
+        /* AI Assistant Widget */
+        #ai-widget { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+        .ai-btn { width: 60px; height: 60px; border-radius: 50%; background: var(--secondary); color: white; border: none; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .ai-chat { display: none; position: absolute; bottom: 80px; right: 0; width: 320px; height: 420px; background: white; border-radius: 10px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); flex-direction: column; overflow: hidden; }
+        .ai-header { background: var(--primary); color: white; padding: 15px; font-weight: bold; }
+        .ai-body { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 0.9rem; }
+        .ai-msg { padding: 8px 12px; border-radius: 8px; max-width: 80%; }
+        .ai-msg.bot { background: #e9ecef; align-self: flex-start; }
+        .ai-msg.user { background: var(--secondary); color: white; align-self: flex-end; }
+        .ai-footer { padding: 10px; display: flex; gap: 5px; border-top: 1px solid #eee; }
+        .ai-footer input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+
+        /* Responsive */
+        @media (max-width: 768px) { nav ul { display: none; } #hero h1 { font-size: 2rem; } }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo"><i class="fa-solid fa-user-doctor"></i> SurgiExpert</div>
+        <ul>
+            <li><a href="#about">О нас</a></li>
+            <li><a href="#directions">Направления</a></li>
+            <li><a href="#teachers">Преподаватели</a></li>
+            <li><a href="#calculator">Калькулятор</a></li>
+            <li><a href="#contact">Контакты</a></li>
+        </ul>
+    </nav>
+
+    <!-- 1. Главный баннер (Hero) -->
+    <section id="hero">
+        <h1>Профессиональные Курсы Хирургии в Казахстане</h1>
+        <p>Практическое обучение от ведущих нейро-, кардио- и пластических хирургов. Повышение квалификации и симуляционные тренажеры.</p>
+        <a href="#calculator" class="btn">Рассчитать стоимость</a>
+    </section>
+
+    <!-- 2. Статистика -->
+    <section id="stats">
+        <div class="stat-item"><h3>15+</h3><p>Лет опыта</p></div>
+        <div class="stat-item"><h3>2 400+</h3><p>Выпускников</p></div>
+        <div class="stat-item"><h3>85%</h3><p>Практических занятий</p></div>
+        <div class="stat-item"><h3>100%</h3><p>Сертификат МЗ РК</p></div>
+    </section>
+
+    <!-- 3. О школе -->
+    <section id="about">
+        <div class="section-title">
+            <h2>О нашей Академии</h2>
+            <p>Мы готовим специалистов по передовым международным стандартам хирургии</p>
+        </div>
+        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <p>Центр «SurgiExpert» предоставляет доступ к современным кадаверным лабораториям, высокотехнологичным симуляторам и прямым трансляциям из операционных блоков ведущих клиник Астаны и Алматы.</p>
+        </div>
+    </section>
+
+    <!-- 4. Направления хирургии -->
+    <section id="directions" style="background: #fff;">
+        <div class="section-title">
+            <h2>Направления обучения</h2>
+            <p>Выберите специализацию для отработки навыков</p>
+        </div>
+        <div class="grid-3">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=600&q=80" alt="Лапароскопия">
+                <div class="card-content">
+                    <h3>Общая и Лапароскопическая хирургия</h3>
+                    <p>Минимально инвазивные вмешательства, базовый и продвинутый шовный материал.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=600&q=80" alt="Нейрохирургия">
+                <div class="card-content">
+                    <h3>Нейрохирургия & Сосуды</h3>
+                    <p>Микрохирургическая техника, работа под операционным микроскопом.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=600&q=80" alt="Пластическая хирургия">
+                <div class="card-content">
+                    <h3>Пластическая и Эстетическая хирургия</h3>
+                    <p>Современные методики реконструкции, шовные техники в косметологии.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Преподаватели -->
+    <section id="teachers">
+        <div class="section-title">
+            <h2>Наши Преподаватели</h2>
+            <p>Обучайтесь у практикующих профессоров и докторов медицинских наук</p>
+        </div>
+        <div class="grid-3">
+            <div class="card" style="text-align: center;">
+                <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80" alt="Доктор">
+                <div class="card-content">
+                    <h3>Д-р Арман Сулейменов</h3>
+                    <p style="color: var(--secondary); font-weight: bold;">Д.м.н., Кардиохирург</p>
+                    <p>Стаж 22 года. Провел более 3000 успешных операций на открытом сердце.</p>
+                </div>
+            </div>
+            <div class="card" style="text-align: center;">
+                <img src="https://images.unsplash.com/photo-1594824813566-78a8727c42df?auto=format&fit=crop&w=600&q=80" alt="Доктор">
+                <div class="card-content">
+                    <h3>Д-р Алия Нурпеисова</h3>
+                    <p style="color: var(--secondary); font-weight: bold;">Профессор, Нейрохирург</p>
+                    <p>Стаж 18 лет. Автор 45 научных публикаций по микрохирургии головного мозга.</p>
+                </div>
+            </div>
+            <div class="card" style="text-align: center;">
+                <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=600&q=80" alt="Доктор">
+                <div class="card-content">
+                    <h3>Д-р Данияр Ахметов</h3>
+                    <p style="color: var(--secondary); font-weight: bold;">Лапароскопист высшей категории</p>
+                    <p>Стаж 15 лет. Специалист по малоинвазивным абдоминальным операциям.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Калькулятор стоимости -->
+    <section id="calculator-section" style="background: #eef2f5;">
+        <div class="section-title">
+            <h2>Интерактивный Калькулятор Обучения</h2>
+            <p>Узнайте точную стоимость в зависимости от формата, срока и действующих скидок</p>
+        </div>
+        <div id="calculator">
+            <div class="calc-group">
+                <label>Направление курса:</label>
+                <select id="course-type">
+                    <option value="45000">Общая и Лапароскопическая хирургия (45 000 ₸/день)</option>
+                    <option value="60000">Нейрохирургия и Сосудистая (60 000 ₸/день)</option>
+                    <option value="55000">Пластическая и Реконструктивная (55 000 ₸/день)</option>
+                </select>
+            </div>
+            <div class="calc-group">
+                <label>Длительность обучения (дней): <span id="days-val">5</span></label>
+                <input type="range" id="days" min="1" max="30" value="5">
+            </div>
+            <div class="calc-group">
+                <label>Ваш статус (Скидка):</label>
+                <select id="discount">
+                    <option value="0">Без скидки</option>
+                    <option value="0.15">Студент/Интерн (-15%)</option>
+                    <option value="0.10">Раннее бронирование (-10%)</option>
+                    <option value="0.20">Групповое обучение (-20%)</option>
+                </select>
+            </div>
+            <div class="price-output">
+                <h4>Итоговый расчет:</h4>
+                <p>Стоимость за 1 день: <strong id="price-per-day">0</strong> ₸</p>
+                <p>Расчет за месяц (20 рабочих дней со скидкой): <strong id="price-month">0</strong> ₸</p>
+                <hr style="margin: 10px 0;">
+                <p style="font-size: 1.2rem; color: var(--primary);">Общая стоимость за выбранный период (<span id="selected-days">5</span> дн.): <br><strong id="total-price" style="font-size: 1.8rem; color: var(--accent);">0</strong> ₸</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Практика и Оборудование -->
+    <section>
+        <div class="section-title">
+            <h2>Практика и Лаборатории</h2>
+            <p>Современное оборудование для отработки навыков</p>
+        </div>
+        <div class="grid-3">
+            <div style="background:white; padding: 20px; border-radius: 8px;">
+                <i class="fa-solid fa-vr-cardboard" style="font-size: 2rem; color: var(--secondary);"></i>
+                <h3 style="margin: 10px 0;">VR-Симуляторы</h3>
+                <p>Тренировка 3D-координации и точности движений на виртуальных органах.</p>
+            </div>
+            <div style="background:white; padding: 20px; border-radius: 8px;">
+                <i class="fa-solid fa-microscope" style="font-size: 2rem; color: var(--secondary);"></i>
+                <h3 style="margin: 10px 0;">Кадавер-Лаб</h3>
+                <p>Максимально близкая к реальным условиям отработка техники на биологическом материале.</p>
+            </div>
+            <div style="background:white; padding: 20px; border-radius: 8px;">
+                <i class="fa-solid fa-hospital-user" style="font-size: 2rem; color: var(--secondary);"></i>
+                <h3 style="margin: 10px 0;">Ассистирование</h3>
+                <p>Присутствие в реальных операционных блоках клиник-партнеров.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. Программа обучения -->
+    <section style="background: white;">
+        <div class="section-title">
+            <h2>Пример Программы (5 дней)</h2>
+        </div>
+        <div style="max-width: 700px; margin: 0 auto;">
+            <p><strong>День 1:</strong> Базовый шовный материал, хирургические узлы, асептика.</p><hr style="margin: 10px 0;">
+            <p><strong>День 2:</strong> Работа с эндоскопическим стойками и тренажерами.</p><hr style="margin: 10px 0;">
+            <p><strong>День 3:</strong> Препарирование и остановка кровотечений на модели.</p><hr style="margin: 10px 0;">
+            <p><strong>День 4:</strong> Сложные микрохирургические техники под микроскопом.</p><hr style="margin: 10px 0;">
+            <p><strong>День 5:</strong> Итоговый практический экзамен и выдача сертификатов.</p>
+        </div>
+    </section>
+
+    <!-- 9. Сертификация -->
+    <section>
+        <div class="section-title">
+            <h2>Лицензии и Сертификаты</h2>
+            <p>Все наши программы аккредитованы Министерством Здравоохранения РК</p>
+        </div>
+        <div style="text-align: center;">
+            <i class="fa-solid fa-award" style="font-size: 4rem; color: var(--primary); margin-bottom: 15px;"></i>
+            <p>По окончании курса выдается свидетельство установленного образца с присвоением зачетных единиц (часов/кредитов).</p>
+        </div>
+    </section>
+
+    <!-- 10. Отзывы -->
+    <section style="background: #fff;">
+        <div class="section-title">
+            <h2>Отзывы слушателей</h2>
+        </div>
+        <div class="grid-3">
+            <div style="background: var(--light); padding: 20px; border-radius: 8px;">
+                <p>"Прекрасный курс по лапароскопии! Отточил навыки шва на симуляторах. Спасибо д-ру Ахметову!"</p>
+                <h4 style="margin-top: 10px; color: var(--primary);">— Ержан Б., Хирург-интерн</h4>
+            </div>
+            <div style="background: var(--light); padding: 20px; border-radius: 8px;">
+                <p>"Очень интенсивная практика. В Кадавер-Лаб получили ответы на все вопросы по микрохирургии."</p>
+                <h4 style="margin-top: 10px; color: var(--primary);">— Динара М., Сосудистый хирург</h4>
+            </div>
+        </div>
+    </section>
+
+    <!-- 11. FAQ -->
+    <section>
+        <div class="section-title">
+            <h2>Часто задаваемые вопросы</h2>
+        </div>
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h4>Предоставляются ли материалы для практики?</h4>
+            <p style="margin-bottom: 15px;">Да, все необходимые инструменты, шовный материал и симуляторы входят в стоимость.</p>
+            <h4>Кому подходят курсы?</h4>
+            <p style="margin-bottom: 15px;">Студентам старших курсов мед.вузов, интернам, резидентам и практикующим хирургам для повышения квалификации.</p>
+        </div>
+    </section>
+
+    <!-- 12. Контакты и Форма -->
+    <section id="contact" style="background: var(--dark); color: white;">
+        <div class="section-title">
+            <h2 style="color: white;">Записаться на курс</h2>
+            <p style="color: #ccc;">Оставьте заявку, и наш менеджер свяжется с вами</p>
+        </div>
+        <div style="max-width: 500px; margin: 0 auto;">
+            <form onsubmit="event.preventDefault(); alert('Спасибо за заявку! Мы свяжемся с вами.');">
+                <input type="text" placeholder="Ваше Имя" required style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: none;">
+                <input type="tel" placeholder="Телефон (+7 700 000 00 00)" required style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: none;">
+                <button type="submit" class="btn" style="width: 100%;">Отправить заявку</button>
+            </form>
+            <div style="margin-top: 30px; text-align: center;">
+                <p><i class="fa-solid fa-location-dot"></i> г. Астана, пр. Кабанбай Батыра, 53</p>
+                <p><i class="fa-solid fa-phone"></i> +7 (7172) 99-88-77</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ИИ Помощник (AI Assistant Widget) -->
+    <div id="ai-widget">
+        <div class="ai-chat" id="ai-chat">
+            <div class="ai-header"><i class="fa-solid fa-robot"></i> AI-Консультант SurgiExpert</div>
+            <div class="ai-body" id="ai-body">
+                <div class="ai-msg bot">Здравствуйте! Я ИИ-ассистент академии. Подсказать вам информацию по курсам хирургии или помочь с расчетом цены?</div>
+            </div>
+            <div class="ai-footer">
+                <input type="text" id="ai-input" placeholder="Задайте вопрос...">
+                <button class="btn" onclick="sendAiMessage()" style="padding: 8px 15px;"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <button class="ai-btn" onclick="toggleAiChat()"><i class="fa-solid fa-comments"></i></button>
+    </div>
+
+    <!-- JavaScript logic -->
+    <script>
+        // 1. Логика калькулятора
+        const courseType = document.getElementById('course-type');
+        const daysInput = document.getElementById('days');
+        const daysVal = document.getElementById('days-val');
+        const selectedDays = document.getElementById('selected-days');
+        const discountSelect = document.getElementById('discount');
+
+        const pricePerDayElem = document.getElementById('price-per-day');
+        const priceMonthElem = document.getElementById('price-month');
+        const totalPriceElem = document.getElementById('total-price');
+
+        function calculatePrice() {
+            const basePrice = parseFloat(courseType.value);
+            const days = parseInt(daysInput.value);
+            const discount = parseFloat(discountSelect.value);
+
+            daysVal.innerText = days;
+            selectedDays.innerText = days;
+
+            // Расчет со скидкой
+            const discountedDayPrice = basePrice * (1 - discount);
+            const totalPrice = discountedDayPrice * days;
+            
+            // Расчет за месяц (20 рабочих дней)
+            const monthPrice = discountedDayPrice * 20;
+
+            pricePerDayElem.innerText = discountedDayPrice.toLocaleString('ru-RU');
+            priceMonthElem.innerText = monthPrice.toLocaleString('ru-RU');
+            totalPriceElem.innerText = totalPrice.toLocaleString('ru-RU');
+        }
+
+        courseType.addEventListener('change', calculatePrice);
+        daysInput.addEventListener('input', calculatePrice);
+        discountSelect.addEventListener('change', calculatePrice);
+        calculatePrice(); // Инициализация
+
+        // 2. Логика ИИ Помощника
+        function toggleAiChat() {
+            const chat = document.getElementById('ai-chat');
+            chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function sendAiMessage() {
+            const input = document.getElementById('ai-input');
+            const body = document.getElementById('ai-body');
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            // Сообщение пользователя
+            const userMsg = document.createElement('div');
+            userMsg.className = 'ai-msg user';
+            userMsg.innerText = text;
+            body.appendChild(userMsg);
+
+            input.value = '';
+            body.scrollTop = body.scrollHeight;
+
+            // Ответ бота (эмуляция ИИ)
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'ai-msg bot';
+                
+                const lower = text.toLowerCase();
+                if (lower.includes('цена') || lower.includes('стоимость') || lower.includes('тенге')) {
+                    botMsg.innerText = "Цены на курсы начинаются от 45 000 ₸/день. Вы можете воспользоваться калькулятором на сайте для точного расчета с учетом скидок!";
+                } else if (lower.includes('практика') || lower.includes('симулятор')) {
+                    botMsg.innerText = "85% времени курса занимает практика в Кадавер-лабораториях и на продвинутых VR-симуляторах.";
+                } else if (lower.includes('преподаватель') || lower.includes('учитель')) {
+                    botMsg.innerText = "Наши преподаватели — действующие доктора наук и профессора (например, д-р Арман Сулейменов, д-р Алия Нурпеисова).";
+                } else {
+                    botMsg.innerText = "Спасибо за ваш вопрос! Для получения детальной консультации оставьте заявку внизу страницы или позвоните по телефону +7 (7172) 99-88-77.";
+                }
+
+                body.appendChild(botMsg);
+                body.scrollTop = body.scrollHeight;
+            }, 800);
+        }
+    </script>
+</body>
+</html>
